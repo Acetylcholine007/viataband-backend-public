@@ -81,14 +81,17 @@
 
 - Data structure for Reading<br/>
   `{`<br/>
-  ` firstname: String,`<br/>
-  ` lastname: String,`<br/>
-  ` address: String,`<br/>
-  ` age: Number,`<br/>
-  ` contactNo: String,`<br/>
-  ` isMale: Boolean,`<br/>
-  ` latitude: Number,`<br/>
-  ` longitude: Number`<br/>
+  ` source: {nodeSerial: String},`<br/>
+  ` temperature: Number,`<br/>
+  ` spo2: Number,`<br/>
+  ` heartRate: Number,`<br/>
+  ` cough: Boolean,`<br/>
+  ` lat: Number,`<br/>
+  ` lng: Number,`<br/>
+  ` datetime: String`<br/>
+  ` ir: Number,`<br/>
+  ` irBuffer: Array,`<br/>
+  ` battery: Number,`<br/>
   `}`<br/>
 
 - Websocket Usage for React<br/>
