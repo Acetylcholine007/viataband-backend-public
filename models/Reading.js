@@ -11,7 +11,6 @@ const readingSchema = Schema(
     lat: Number,
     lng: Number,
     datetime: Date,
-    cough: Boolean,
     ir: Number,
     irBuffer: Array,
     battery: Number,
