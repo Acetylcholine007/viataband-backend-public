@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const readingSchema = Schema(
   {
-    source: Object,
+    nodeSerial: String,
     temperature: Number,
     spo2: Number,
     heartReate: Number,
@@ -18,7 +18,7 @@ const readingSchema = Schema(
   {
     timeseries: {
       timeField: "datetime",
-      metaField: "source",
+      metaField: "nodeSerial",
       granularity: "seconds",
     },
     autoCreate: false,

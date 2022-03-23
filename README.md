@@ -40,7 +40,7 @@
   - **Headers:** `{Authorization: Bearer token}`
   - **Request Body:** None
   - **Response:** `{message: String, data: {node: {_id: String, patient: Object, nodeSerial: String, createdAt: String, updatedAt: String, readings: [Object]}}}`
-  - **Query parameters:** `readingLength` -- optional
+  - **Query parameters:** `readingLength` and `offset` -- optional
 
 - PUT /nodes/:nodeId
   - **Usage:** For editing node serial or Patient information

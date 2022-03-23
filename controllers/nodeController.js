@@ -49,14 +49,16 @@ exports.getNodes = async (req, res, next) => {
 
 exports.getNode = async (req, res, next) => {
   try {
+    const readingLength = req.query.readingLength || 20;
+    const offset = req.query.offset || 0;
     const nodeId = req.params.nodeId;
     const node = await Node.findById(nodeId).populate("patient");
     const readings = await Reading.find({
-      source: { nodeSerial: node.nodeSerial },
+      nodeSerial: node.nodeSerial,
     })
       .sort({ createdAt: -1 })
-      .skip((1 - 1) * 5)
-      .limit(5);
+      .skip(offset)
+      .limit(readingLength);
 
     res.status(200).json({
       message: "Node fetched.",
@@ -113,10 +115,15 @@ exports.putNode = async (req, res, next) => {
       throw error;
     }
     const patientData = req.body.patient || null;
-    const nodeSerial = req.body.nodeSerial;
+    const nodeId = req.params.nodeId;
     let patient;
 
-    const node = await Node.findOne({ nodeSerial });
+    const node = await Node.findById(nodeId);
+    if (!node) {
+      const error = new Error("Node does not exists");
+      error.statusCode = 422;
+      throw error;
+    }
 
     if (patientData !== null) {
       if (node.patient !== null) {
@@ -127,6 +134,8 @@ exports.putNode = async (req, res, next) => {
         patient.age = patientData.age;
         patient.contactNo = patientData.contactNo;
         patient.sex = patientData.sex;
+        patient.latitude = patientData.latitude;
+        patient.longitude = patientData.longitude;
       } else {
         patient = await Patient.findOne({
           firstname: patientData.firstname,

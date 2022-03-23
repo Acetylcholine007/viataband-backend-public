@@ -20,7 +20,9 @@ router.post(
       .not()
       .isEmpty()
       .custom((value, { req }) => {
-        
+        if (value.length !== 4) {
+          return Promise.reject("Node serial should be 4 character String");
+        }
         return Node.findOne({ nodeSerial: value }).then((nodeDoc) => {
           if (nodeDoc) {
             return Promise.reject("Node with the same serial already exist");

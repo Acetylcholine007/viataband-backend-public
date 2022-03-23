@@ -23,10 +23,9 @@ exports.postReading = async (req, res, next) => {
       dateParts[1],
       ...timeParts
     );
-    console.log(JSON.stringify(req.body));
 
     const reading = new Reading({
-      source: { nodeSerial: req.body.nodeSerial },
+      nodeSerial: req.body.nodeSerial,
       temperature: req.body.temperature,
       spo2: req.body.spo2,
       heartReate: req.body.heartReate,
@@ -37,8 +36,9 @@ exports.postReading = async (req, res, next) => {
       cough: parseInt(req.body.cough),
       ir: req.body.ir,
       irBuffer: [],
+      battery: req.body.battery
     });
-    // await reading.save();
+    await reading.save();
     io.getIO().emit("node", { nodeSerial: req.body.nodeSerial, reading });
 
     res.status(201).json({ success: true });
