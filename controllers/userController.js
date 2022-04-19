@@ -58,6 +58,8 @@ exports.login = async (req, res, next) => {
       {
         email: loadedUser.email,
         userId: loadedUser._id.toString(),
+        firstname: loadedUser.firstname,
+        lastname: loadedUser.lastname
       },
       "TeamVitaband",
       // { expiresIn: "1h" }
