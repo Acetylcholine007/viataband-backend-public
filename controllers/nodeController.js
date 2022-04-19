@@ -86,17 +86,37 @@ exports.postNode = async (req, res, next) => {
     }
     const patient = req.body.patient;
     const nodeSerial = req.body.nodeSerial;
-    const node = new Node({
-      patient,
-      nodeSerial,
-    });
-    await node.save();
-    res.status(201).json({
-      message: "Node added",
-      data: {
-        node,
-      },
-    });
+    if (JSON.stringify(patient) === "{}") {
+      const node = new Node({
+        nodeSerial,
+      });
+      await node.save();
+      res.status(200).json({
+        message: "Node added",
+        data: node,
+      });
+    } else {
+      const newPatient = Patient({
+        firstname: patient.firstname,
+        lastname: patient.lastname,
+        address: patient.address,
+        age: patient.age,
+        contactNo: patient.contactNo,
+        isMale: patient.isMale,
+        latitude: patient.latitude,
+        longitude: patient.longitude,
+      });
+      await newPatient.save();
+      const node = new Node({
+        patient: newPatient,
+        nodeSerial,
+      });
+      await node.save();
+      res.status(200).json({
+        message: "Node added",
+        data: node,
+      });
+    }
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -133,7 +153,7 @@ exports.putNode = async (req, res, next) => {
         patient.address = patientData.address;
         patient.age = patientData.age;
         patient.contactNo = patientData.contactNo;
-        patient.sex = patientData.sex;
+        patient.isMale = patientData.isMale;
         patient.latitude = patientData.latitude;
         patient.longitude = patientData.longitude;
       } else {
@@ -157,7 +177,7 @@ exports.putNode = async (req, res, next) => {
       }
     }
     await node.save();
-    res.status(201).json({
+    res.status(200).json({
       message: "Node updated",
       data: { node },
     });

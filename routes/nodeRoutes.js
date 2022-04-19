@@ -20,8 +20,8 @@ router.post(
       .not()
       .isEmpty()
       .custom((value, { req }) => {
-        if (value.length !== 4) {
-          return Promise.reject("Node serial should be 4 character String");
+        if (value.length !== 2) {
+          return Promise.reject("Node serial should be 2 character String");
         }
         return Node.findOne({ nodeSerial: value }).then((nodeDoc) => {
           if (nodeDoc) {
