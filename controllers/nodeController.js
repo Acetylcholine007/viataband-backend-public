@@ -26,7 +26,9 @@ exports.getNodes = async (req, res, next) => {
     const totalItems = await Node.find(
       queryTarget ? { [queryTarget]: query } : {}
     ).countDocuments();
-    const nodes = await Node.find(queryTarget ? { [queryTarget]: query } : {})
+    const nodes = await Node.find(
+      query ? (queryTarget ? { [queryTarget]: {$regex: query, $options: 'i'} } : {}) : {}
+    )
       .populate("patient")
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
