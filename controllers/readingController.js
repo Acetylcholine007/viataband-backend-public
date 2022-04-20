@@ -36,10 +36,15 @@ exports.postReading = async (req, res, next) => {
       cough: parseInt(req.body.cough),
       ir: req.body.ir,
       irBuffer: [],
-      battery: req.body.battery
+      battery: req.body.battery,
     });
     await reading.save();
-    io.getIO().emit("node", { nodeSerial: req.body.nodeSerial, reading });
+    console.log(datetime.toTimeString());
+    console.log(reading);
+    io.getIO().emit(req.body.nodeSerial, {
+      nodeSerial: req.body.nodeSerial,
+      reading,
+    });
 
     res.status(201).json({ success: true });
   } catch (err) {
