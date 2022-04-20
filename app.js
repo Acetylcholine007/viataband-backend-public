@@ -12,6 +12,7 @@ const nodeRoutes = require("./routes/nodeRoutes");
 const patientRoutes = require("./routes/patientRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const testRoutes = require("./routes/testRoutes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/nodes", nodeRoutes);
 app.use("/patients", patientRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/test", testRoutes);
 
 app.use(errorMW);
 

@@ -2,11 +2,7 @@ const { validationResult } = require("express-validator/check");
 const Reading = require("../models/Reading");
 const io = require("../socket");
 
-exports.getReading = async (req, res, next) => {
-  res.status(201).json({ success: true });
-};
-
-exports.postReading = async (req, res, next) => {
+exports.testPostReading = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -38,7 +34,6 @@ exports.postReading = async (req, res, next) => {
       irBuffer: [],
       battery: req.body.battery,
     });
-    // await reading.save();
     console.log(datetime.toTimeString());
     console.log(reading);
     io.getIO().emit(req.body.nodeSerial, {
@@ -46,7 +41,7 @@ exports.postReading = async (req, res, next) => {
       reading,
     });
 
-    res.status(201).json({ success: true });
+    res.status(201).json(reading);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
