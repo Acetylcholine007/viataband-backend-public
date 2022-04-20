@@ -28,7 +28,7 @@ exports.postReading = async (req, res, next) => {
       nodeSerial: req.body.nodeSerial,
       temperature: req.body.temperature,
       spo2: req.body.spo2,
-      heartReate: req.body.heartReate,
+      heartRate: req.body.heartRate,
       cough: req.body.cough,
       lat: req.body.lat,
       lng: req.body.lng,

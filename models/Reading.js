@@ -6,7 +6,7 @@ const readingSchema = Schema(
     nodeSerial: String,
     temperature: Number,
     spo2: Number,
-    heartReate: Number,
+    heartRate: Number,
     cough: Boolean,
     lat: Number,
     lng: Number,
