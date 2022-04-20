@@ -38,7 +38,7 @@ exports.postReading = async (req, res, next) => {
       irBuffer: [],
       battery: req.body.battery,
     });
-    // await reading.save();
+    await reading.save();
     console.log(datetime.toTimeString());
     console.log(reading);
     io.getIO().emit(req.body.nodeSerial, {
