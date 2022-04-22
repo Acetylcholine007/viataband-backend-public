@@ -10,6 +10,14 @@ const gatewaySchema = new Schema({
     type: String,
     required: true,
   },
+  ssid: {
+    type: String,
+    required: true,
+  },
+  endpoint: {
+    type: String,
+    required: true,
+  },
   isVerified: {
     type: Boolean,
     default: true,

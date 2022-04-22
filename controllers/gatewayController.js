@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
   try {
     const serialNumber = req.body.serialNumber;
     const password = req.body.password;
-    
+
     let loadedGateway;
     const gateway = await Gateway.findOne({ serialNumber });
     if (!gateway) {
@@ -122,6 +122,8 @@ exports.putGateway = async (req, res, next) => {
 
     gateway.serialNumber = req.body.serialNumber;
     gateway.password = req.body.password;
+    gateway.ssid = req.body.ssid;
+    gateway.endpoint = req.body.endpoint;
     gateway.isVerified = req.body.isVerified;
     await gateway.save();
     res.status(201).json({
@@ -149,6 +151,45 @@ exports.deleteGateway = async (req, res, next) => {
     res.status(201).json({
       message: "Gateway Removed",
     });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.postGateway = async (req, res, next) => {
+  const gatewaySerial = req.body.gatewaySerial;
+  const password = req.body.password;
+  const ssid = req.body.ssid;
+  const endpoint = req.body.endpoint;
+
+  const gateway = new Gateway({
+    gatewaySerial,
+    password,
+    ssid,
+    endpoint
+  });
+  const result = await gateway.save();
+  res.status(201).json({ message: "Gateway Created", data: result });
+};
+
+exports.getCredentials = async (req, res, next) => {
+  try {
+    const gateway = await Gateway.findOne({ gatewaySerial: "ABCD" });
+    if (!gateway) {
+      const error = new Error("Could not find gateway.");
+      error.statusCode = 404;
+      throw error;
+    }
+    res
+      .status(200)
+      .json({
+        ssid: gateway.ssid,
+        password: gateway.password,
+        endpoint: gateway.endpoint,
+      });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

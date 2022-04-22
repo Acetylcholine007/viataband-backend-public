@@ -7,7 +7,11 @@ const router = express.Router();
 
 router.get("/", userAuthMW, gatewayController.getGateways);
 
-router.get("/:gatewayId", userAuthMW, gatewayController.getGateway);
+router.get("/getCredentials", gatewayController.getCredentials);
+
+router.get("/:gatewayId", gatewayController.getGateway);
+
+router.post("/", gatewayController.postGateway);
 
 router.put("/:gatewayId", userAuthMW, gatewayController.putGateway);
 
