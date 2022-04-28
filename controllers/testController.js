@@ -13,12 +13,13 @@ exports.testPostReading = async (req, res, next) => {
     }
     const dateParts = req.body.date.split("/");
     const timeParts = req.body.time.split(":");
-    const datetime = new Date(
+    let datetime = new Date(
       dateParts[2],
       parseInt(dateParts[0]) - 1,
       dateParts[1],
       ...timeParts
     );
+    datetime = new Date(datetime - 3600000)
 
     const reading = new Reading({
       nodeSerial: req.body.nodeSerial,
@@ -34,7 +35,7 @@ exports.testPostReading = async (req, res, next) => {
       irBuffer: [],
       battery: req.body.battery,
     });
-    console.log(datetime.toTimeString());
+    console.log(datetime.toLocaleString());
     console.log(reading);
     io.getIO().emit(req.body.nodeSerial, {
       nodeSerial: req.body.nodeSerial,
