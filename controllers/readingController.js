@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator/check");
+const { DateTime } = require("luxon");
 const Reading = require("../models/Reading");
 const io = require("../socket");
 
@@ -18,14 +19,15 @@ exports.postReading = async (req, res, next) => {
     }
     const dateParts = req.body.date.split("/");
     const timeParts = req.body.time.split(":");
-    let datetime = new Date(
-      dateParts[2],
-      parseInt(dateParts[0]) - 1,
-      dateParts[1],
-      ...timeParts
-    );
 
-    datetime = new Date(datetime - 3600000)
+    let datetime = DateTime.local({
+      year: dateParts[2],
+      day: dateParts[1],
+      month: dateParts[0],
+      hour: timeParts[0],
+      minute: timeParts[1],
+      second: timeParts[2],
+    }).setZone("Asia/Singapore");
 
     const reading = new Reading({
       nodeSerial: req.body.nodeSerial,
