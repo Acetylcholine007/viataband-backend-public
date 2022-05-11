@@ -42,6 +42,10 @@ exports.testPostReading = async (req, res, next) => {
       nodeSerial: req.body.nodeSerial,
       reading,
     });
+    io.getIO().emit('global', {
+      nodeSerial: req.body.nodeSerial,
+      reading,
+    });
 
     res.status(201).json(reading);
   } catch (err) {
