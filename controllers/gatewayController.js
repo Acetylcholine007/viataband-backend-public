@@ -120,14 +120,15 @@ exports.putGateway = async (req, res, next) => {
     const gatewayId = req.params.gatewayId;
     const gateway = await Gateway.findById(gatewayId);
 
-    gateway.serialNumber = req.body.serialNumber;
+    gateway.gatewaySerial = req.body.gatewaySerial;
     gateway.password = req.body.password;
     gateway.ssid = req.body.ssid;
     gateway.endpoint = req.body.endpoint;
     gateway.isVerified = req.body.isVerified;
     await gateway.save();
-    res.status(201).json({
+    res.status(200).json({
       message: "Gateway updated",
+      data: gateway,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -148,7 +149,7 @@ exports.deleteGateway = async (req, res, next) => {
 
     await Gateway.findByIdAndRemove(gatewayId);
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Gateway Removed",
     });
   } catch (err) {
@@ -169,10 +170,10 @@ exports.postGateway = async (req, res, next) => {
     gatewaySerial,
     password,
     ssid,
-    endpoint
+    endpoint,
   });
   const result = await gateway.save();
-  res.status(201).json({ message: "Gateway Created", data: result });
+  res.status(200).json({ message: "Gateway Created", data: result });
 };
 
 exports.getCredentials = async (req, res, next) => {
@@ -183,13 +184,11 @@ exports.getCredentials = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res
-      .status(200)
-      .json({
-        ssid: gateway.ssid,
-        password: gateway.password,
-        endpoint: gateway.endpoint,
-      });
+    res.status(200).json({
+      ssid: gateway.ssid,
+      password: gateway.password,
+      endpoint: gateway.endpoint,
+    });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

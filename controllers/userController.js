@@ -26,7 +26,7 @@ exports.signup = async (req, res, next) => {
     });
     const result = await user.save();
     res
-      .status(201)
+      .status(200)
       .json({ message: "User created", data: { userId: result._id } });
   } catch (err) {
     if (!err.statusCode) {
@@ -45,6 +45,11 @@ exports.login = async (req, res, next) => {
     if (!user) {
       const error = new Error("Email does not exist");
       error.statusCode = 401;
+      throw error;
+    }
+    if (!user.isVerified) {
+      const error = new Error("Account Not verified. Contact Admin to review your account first");
+      error.statusCode = 403;
       throw error;
     }
     loadedUser = user;
@@ -69,6 +74,7 @@ exports.login = async (req, res, next) => {
         userId: loadedUser._id.toString(),
         firstname: loadedUser.firstname,
         lastname: loadedUser.lastname,
+        accountType: loadedUser.accountType
       },
     });
   } catch (err) {
@@ -139,7 +145,7 @@ exports.putUser = async (req, res, next) => {
     user.accountType = req.body.accountType;
     user.isVerified = req.body.isVerified;
     await user.save();
-    res.status(201).json({
+    res.status(200).json({
       message: "User updated",
     });
   } catch (err) {
@@ -161,7 +167,7 @@ exports.deleteUser = async (req, res, next) => {
 
     await User.findByIdAndRemove(userId);
 
-    res.status(201).json({
+    res.status(200).json({
       message: "User Removed",
     });
   } catch (err) {

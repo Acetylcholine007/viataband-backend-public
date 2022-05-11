@@ -51,7 +51,7 @@ exports.getNodes = async (req, res, next) => {
 
 exports.getNode = async (req, res, next) => {
   try {
-    const readingLength = req.query.readingLength || 20;
+    const readingLength = req.query.readingLength || 15;
     const offset = req.query.offset || 0;
     const nodeId = req.params.nodeId;
     const node = await Node.findById(nodeId).populate("patient");
@@ -141,11 +141,20 @@ exports.putNode = async (req, res, next) => {
     let patient;
 
     const node = await Node.findById(nodeId);
+    const node2 = await Node.findOne({nodeSerial: req.body.nodeSerial});
     if (!node) {
       const error = new Error("Node does not exists");
       error.statusCode = 422;
       throw error;
     }
+
+    if (node2) {
+      const error = new Error("Node Serial already exists");
+      error.statusCode = 422;
+      throw error;
+    }
+
+    node.nodeSerial = req.body.nodeSerial;
 
     if (patientData !== null) {
       if (node.patient !== null) {
@@ -206,7 +215,7 @@ exports.deleteNode = async (req, res, next) => {
 
     await Node.findByIdAndRemove(nodeId);
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Node Removed",
     });
   } catch (err) {
