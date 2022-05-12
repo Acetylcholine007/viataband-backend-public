@@ -196,3 +196,24 @@ exports.getCredentials = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getGatewayInfo = async (req, res, next) => {
+  try {
+    const gateway = await Gateway.findOne({ gatewaySerial: req.params.gatewaySerial });
+    if (!gateway) {
+      const error = new Error("Could not find gateway.");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({
+      ssid: gateway.ssid,
+      password: gateway.password,
+      endpoint: gateway.endpoint,
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};

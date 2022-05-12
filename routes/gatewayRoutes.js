@@ -9,6 +9,8 @@ router.get("/", userAuthMW, gatewayController.getGateways);
 
 router.get("/getCredentials", gatewayController.getCredentials);
 
+router.get("/getGatewayInfo/:gatewaySerial", gatewayController.getGatewayInfo);
+
 router.get("/:gatewayId", gatewayController.getGateway);
 
 router.post("/", gatewayController.postGateway);
