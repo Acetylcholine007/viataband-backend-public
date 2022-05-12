@@ -148,7 +148,7 @@ exports.putNode = async (req, res, next) => {
       throw error;
     }
 
-    if (node2) {
+    if (node.nodeSerial !== req.body.nodeSerial && node2) {
       const error = new Error("Node Serial already exists");
       error.statusCode = 422;
       throw error;
