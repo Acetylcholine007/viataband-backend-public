@@ -27,7 +27,11 @@ exports.getNodes = async (req, res, next) => {
       queryTarget ? { [queryTarget]: query } : {}
     ).countDocuments();
     const nodes = await Node.find(
-      query ? (queryTarget ? { [queryTarget]: {$regex: query, $options: 'i'} } : {}) : {}
+      query
+        ? queryTarget
+          ? { [queryTarget]: { $regex: query, $options: "i" } }
+          : {}
+        : {}
     )
       .populate("patient")
       .sort({ createdAt: -1 })
@@ -55,12 +59,14 @@ exports.getNode = async (req, res, next) => {
     const offset = req.query.offset || 0;
     const nodeId = req.params.nodeId;
     const node = await Node.findById(nodeId).populate("patient");
-    const readings = await Reading.find({
+    let readings = await Reading.find({
       nodeSerial: node.nodeSerial,
     })
-      .sort({ createdAt: -1 })
+      .sort({ datetime: -1 })
       .skip(offset)
       .limit(readingLength);
+
+    readings.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
     res.status(200).json({
       message: "Node fetched.",
@@ -141,7 +147,7 @@ exports.putNode = async (req, res, next) => {
     let patient;
 
     const node = await Node.findById(nodeId);
-    const node2 = await Node.findOne({nodeSerial: req.body.nodeSerial});
+    const node2 = await Node.findOne({ nodeSerial: req.body.nodeSerial });
     if (!node) {
       const error = new Error("Node does not exists");
       error.statusCode = 422;

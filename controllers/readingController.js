@@ -43,12 +43,26 @@ exports.postReading = async (req, res, next) => {
       irBuffer: [],
       battery: req.body.battery,
     });
+
+    // Corrective Logic
+    if (dateParts[2] === "1970") {
+      datetime = DateTime.now().setLocale('ph');
+      reading.datetime = datetime;
+    }
+    if (req.body.lat === 0 || req.body.lat === 0) {
+      const oldReading = await Reading.findOne({
+        nodeSerial: req.body.nodeSerial,
+      }).sort({ datetime: -1 });
+      reading.lat = oldReading.lat;
+      reading.lng = oldReading.lng;
+    }
+
     await reading.save();
     io.getIO().emit(req.body.nodeSerial, {
       nodeSerial: req.body.nodeSerial,
       reading,
     });
-    io.getIO().emit('global', {
+    io.getIO().emit("global", {
       nodeSerial: req.body.nodeSerial,
       reading,
     });
