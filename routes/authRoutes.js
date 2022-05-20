@@ -22,9 +22,20 @@ router.post(
         });
       })
       .normalizeEmail(),
-    body("password").trim().isLength({ min: 5 }),
-    body("firstname").trim().not().isEmpty(),
-    body("lastname").trim().not().isEmpty(),
+    body("password")
+      .trim()
+      .isLength({ min: 5 })
+      .withMessage("Minimum Password length: 5"),
+    body("firstname")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Please enter First Name"),
+    body("lastname")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("Please enter Last Name"),
   ],
   userController.signup
 );
